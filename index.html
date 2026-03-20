@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay Academeet — ₹999</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:wght@700&display=swap');
+
+  /* ── Dark theme (default) ── */
+  :root {
+    --bg: #0f1117;
+    --card: #181b24;
+    --accent: #6c5ce7;
+    --accent-light: #a29bfe;
+    --green: #00b894;
+    --text: #f0f0f5;
+    --muted: #8b8fa3;
+    --border: rgba(255,255,255,0.07);
+    --card-shadow: 0 24px 80px rgba(0,0,0,0.4);
+    --amount-bg: linear-gradient(135deg, rgba(108,92,231,0.12), rgba(0,184,148,0.08));
+    --amount-border: rgba(108,92,231,0.2);
+    --amount-text: linear-gradient(135deg, #a29bfe, #00b894);
+    --glow1: rgba(108,92,231,0.15);
+    --glow2: rgba(0,184,148,0.1);
+    --upi-chip: rgba(255,255,255,0.06);
+    --upi-chip-hover: rgba(255,255,255,0.11);
+    --divider-line: rgba(255,255,255,0.07);
+    --desktop-bg: rgba(255,200,50,0.07);
+    --desktop-border: rgba(255,200,50,0.15);
+    --desktop-color: #e8c547;
+    color-scheme: dark;
+  }
+
+  /* ── Light theme — follows system automatically ── */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #eef1fb;
+      --card: #ffffff;
+      --accent: #5a4bd1;
+      --accent-light: #6c5ce7;
+      --green: #00a07a;
+      --text: #1a1a2e;
+      --muted: #64748b;
+      --border: rgba(0,0,0,0.07);
+      --card-shadow: 0 20px 60px rgba(108,92,231,0.12), 0 4px 16px rgba(0,0,0,0.05);
+      --amount-bg: linear-gradient(135deg, rgba(108,92,231,0.07), rgba(0,160,122,0.06));
+      --amount-border: rgba(108,92,231,0.14);
+      --amount-text: linear-gradient(135deg, #5a4bd1, #00a07a);
+      --glow1: rgba(108,92,231,0.09);
+      --glow2: rgba(0,160,122,0.07);
+      --upi-chip: rgba(0,0,0,0.04);
+      --upi-chip-hover: rgba(0,0,0,0.08);
+      --divider-line: rgba(0,0,0,0.07);
+      --desktop-bg: rgba(255,200,50,0.08);
+      --desktop-border: rgba(255,160,0,0.2);
+      --desktop-color: #a06000;
+      color-scheme: light;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+    overflow-x: hidden;
+    transition: background 0.35s, color 0.35s;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -40%; left: -20%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--glow1) 0%, transparent 70%);
+    pointer-events: none;
+    transition: background 0.35s;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -30%; right: -10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, var(--glow2) 0%, transparent 70%);
+    pointer-events: none;
+    transition: background 0.35s;
+  }
+
+  /* ── Card ── */
+  .payment-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 440px;
+    padding: 36px 28px 28px;
+    text-align: center;
+    position: relative;
+    box-shadow: var(--card-shadow);
+    animation: slideUp 0.5s ease-out;
+    transition: background 0.35s, border-color 0.35s, box-shadow 0.35s;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(108,92,231,0.1);
+    color: var(--accent-light);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(108,92,231,0.18);
+    transition: color 0.35s, border-color 0.35s;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    animation: blink 2s infinite;
+    transition: background 0.35s;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+
+  .merchant-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+    transition: color 0.35s;
+  }
+  .note {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 22px;
+    transition: color 0.35s;
+  }
+
+  /* ── Amount ── */
+  .amount-box {
+    background: var(--amount-bg);
+    border: 1px solid var(--amount-border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 22px;
+    transition: background 0.35s, border-color 0.35s;
+  }
+  .amount-label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+    transition: color 0.35s;
+  }
+  .amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px;
+    font-weight: 700;
+    background: var(--amount-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .amount span { font-size: 26px; }
+
+  /* ── QR ── */
+  .qr-container {
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px;
+    display: inline-block;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  #qrcode { display: flex; align-items: center; justify-content: center; }
+  #qrcode canvas, #qrcode img { border-radius: 8px; display: block; }
+  .scan-hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 22px;
+    transition: color 0.35s;
+  }
+
+  /* ── Desktop note ── */
+  .desktop-note {
+    display: none;
+    background: var(--desktop-bg);
+    border: 1px solid var(--desktop-border);
+    border-radius: 10px;
+    padding: 9px 14px;
+    font-size: 12px;
+    color: var(--desktop-color);
+    margin-bottom: 16px;
+    transition: background 0.35s, border-color 0.35s, color 0.35s;
+  }
+  @media (min-width: 768px) { .desktop-note { display: block; } }
+
+  /* ── Section label ── */
+  .section-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    transition: color 0.35s;
+  }
+
+  /* ── App Buttons ── */
+  .app-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 9px;
+  }
+
+  .app-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.35s, color 0.35s, border-color 0.35s;
+    position: relative;
+    overflow: hidden;
+  }
+  .app-btn:hover  { transform: translateY(-2px); }
+  .app-btn:active { transform: scale(0.97); }
+
+  /* shimmer on hover */
+  .app-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 55%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+    transition: left 0.45s;
+  }
+  .app-btn:hover::after { left: 140%; }
+
+  .app-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.35s;
+  }
+  .app-icon svg { width: 20px; height: 20px; display: block; }
+
+  /* Image-based icons: white rounded square, image fills it */
+  .app-icon-img {
+    background: #fff;
+    padding: 3px;
+    overflow: hidden;
+  }
+  .app-icon-img img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+    display: block;
+  }
+
+  /* ── Dark mode: coloured gradient buttons ── */
+  .btn-gpay {
+    background: linear-gradient(135deg, #4285F4, #2b6de0);
+    box-shadow: 0 4px 14px rgba(66,133,244,0.28);
+  }
+  .btn-gpay .app-icon { background: #fff; } /* white so multicolor G shows */
+
+  .btn-phonepe {
+    background: linear-gradient(135deg, #5F259F, #471880);
+    box-shadow: 0 4px 14px rgba(95,37,159,0.28);
+  }
+  .btn-phonepe .app-icon { background: rgba(255,255,255,0.18); }
+
+  .btn-paytm {
+    background: linear-gradient(135deg, #00BAF2, #0097C4);
+    box-shadow: 0 4px 14px rgba(0,186,242,0.28);
+  }
+  .btn-paytm .app-icon { background: rgba(255,255,255,0.18); }
+
+  .btn-bhim {
+    background: linear-gradient(135deg, #1565C0, #0D47A1);
+    box-shadow: 0 4px 14px rgba(21,101,192,0.28);
+  }
+  .btn-bhim .app-icon { background: rgba(255,100,30,0.4); }
+
+  .btn-whatsapp {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    box-shadow: 0 4px 14px rgba(37,211,102,0.22);
+    grid-column: 1 / -1;
+  }
+  .btn-whatsapp .app-icon { background: rgba(255,255,255,0.18); }
+
+  /* ── Light mode: white buttons + coloured icon containers ── */
+  @media (prefers-color-scheme: light) {
+    .app-btn {
+      color: var(--text) !important;
+      background: #fff !important;
+      border-color: var(--border) !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    }
+    .app-btn:hover {
+      box-shadow: 0 5px 20px rgba(0,0,0,0.09) !important;
+    }
+    .btn-gpay    .app-icon { background: #e8f0fe; }
+    .btn-phonepe .app-icon { background: #5F259F; }
+    .btn-paytm   .app-icon { background: #00BAF2; }
+    .btn-bhim    .app-icon { background: #1565C0; }
+    .btn-whatsapp .app-icon { background: #25D366; }
+  }
+
+  /* ── Generic UPI button ── */
+  .btn-upi-generic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent), #7c5ce7);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.35s;
+    box-shadow: 0 4px 20px rgba(108,92,231,0.3);
+    margin-top: 9px;
+  }
+  .btn-upi-generic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(108,92,231,0.4);
+  }
+  .btn-upi-generic svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+  /* ── Divider ── */
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 16px 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: var(--divider-line);
+    transition: background 0.35s;
+  }
+  .divider span {
+    font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    white-space: nowrap;
+    transition: color 0.35s;
+  }
+
+  /* ── UPI ID row ── */
+  .upi-id-row {
+    margin-top: 18px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px; flex-wrap: wrap;
+    color: var(--muted); font-size: 13px;
+    transition: color 0.35s;
+  }
+  .upi-id-row .id {
+    font-weight: 600;
+    color: var(--text);
+    background: var(--upi-chip);
+    padding: 4px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.35s;
+    user-select: none;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .upi-id-row .id:hover { background: var(--upi-chip-hover); }
+  .upi-id-row .id svg { width: 12px; height: 12px; opacity: 0.5; flex-shrink: 0; }
+
+  /* ── Toast ── */
+  .copy-toast {
+    position: fixed;
+    bottom: 32px; left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: #1a1a2e;
+    color: #fff;
+    font-weight: 600; font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    white-space: nowrap;
+  }
+  .copy-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .copy-toast svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  .footer {
+    margin-top: 18px;
+    font-size: 11px;
+    color: var(--muted);
+    opacity: 0.55;
+    transition: color 0.35s;
+  }
+
+  @media (max-width: 460px) {
+    .payment-card { padding: 24px 16px 20px; }
+    .amount { font-size: 40px; }
+    .merchant-name { font-size: 22px; }
+    .app-btn { font-size: 12px; padding: 11px 11px; gap: 8px; }
+    .app-icon { width: 28px; height: 28px; border-radius: 7px; }
+    .app-icon svg { width: 17px; height: 17px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="payment-card">
+
+  <div class="badge"><span class="badge-dot"></span>UPI Payment</div>
+  <h1 class="merchant-name">Academeet</h1>
+  <p class="note">Payment for Internship</p>
+
+  <div class="amount-box">
+    <div class="amount-label">Amount Due</div>
+    <div class="amount"><span>₹</span>999</div>
+  </div>
+
+  <div class="qr-container">
+    <div id="qrcode"></div>
+  </div>
+  <p class="scan-hint">Scan with any UPI app to pay</p>
+
+  <div class="desktop-note">
+    &#9888; App buttons work on mobile only. On desktop, scan the QR code or copy the UPI ID below.
+  </div>
+
+  <div class="section-label">Pay with your favourite app</div>
+
+  <div class="app-grid">
+
+    <!-- Google Pay — multicolor Google G on white container -->
+    <a class="app-btn btn-gpay" id="btn-gpay" href="#">
+      <span class="app-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+      </span>
+      Google Pay
+    </a>
+
+    <!-- PhonePe — brand PNG -->
+    <a class="app-btn btn-phonepe" id="btn-phonepe" href="#">
+      <span class="app-icon app-icon-img">
+        <img src="phonepe.png" alt="PhonePe">
+      </span>
+      PhonePe
+    </a>
+
+    <!-- Paytm — brand JPG -->
+    <a class="app-btn btn-paytm" id="btn-paytm" href="#">
+      <span class="app-icon app-icon-img">
+        <img src="paytm.jpg" alt="Paytm">
+      </span>
+      Paytm
+    </a>
+
+    <!-- BHIM UPI — brand AVIF -->
+    <a class="app-btn btn-bhim" id="btn-bhim" href="#">
+      <span class="app-icon app-icon-img">
+        <img src="bhim.png" alt="BHIM UPI">
+      </span>
+      BHIM UPI
+    </a>
+
+    <!-- WhatsApp Pay -->
+    <a class="app-btn btn-whatsapp" id="btn-whatsapp" href="#">
+      <span class="app-icon">
+        <svg viewBox="0 0 24 24" fill="white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </span>
+      WhatsApp Pay
+    </a>
+
+  </div>
+
+  <div class="divider"><span>or open any UPI app</span></div>
+
+  <a class="btn-upi-generic" id="btn-generic" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+    </svg>
+    Pay ₹999 with Any UPI App
+  </a>
+
+  <div class="upi-id-row">
+    UPI ID:
+    <span class="id" id="copyUpi" title="Click to copy">
+      academeet@ybl
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+    </span>
+  </div>
+
+  <div class="footer">Powered by UPI &middot; India's instant payment system</div>
+</div>
+
+<div class="copy-toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+  <span id="toast-msg">UPI ID copied!</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+(function() {
+  // ── Payment config ──
+  var CONFIG = {
+    pa: 'academeet@ybl',
+    pn: 'Academeet',
+    am: '999',
+    cu: 'INR',
+    tn: 'Payment for Internship'
+  };
+
+  var params = 'pa=' + encodeURIComponent(CONFIG.pa)
+    + '&pn=' + encodeURIComponent(CONFIG.pn)
+    + '&am=' + encodeURIComponent(CONFIG.am)
+    + '&cu=' + encodeURIComponent(CONFIG.cu)
+    + '&tn=' + encodeURIComponent(CONFIG.tn);
+
+  var genericUPI = 'upi://pay?' + params;
+
+  var appLinks = {
+    gpay:      'intent://pay?' + params + '#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.google.android.apps.nbu.paisa.user') + ';end;',
+    phonepe:   'intent://pay?' + params + '#Intent;scheme=upi;package=com.phonepe.app;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.phonepe.app') + ';end;',
+    paytm:     'intent://pay?' + params + '#Intent;scheme=upi;package=net.one97.paytm;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=net.one97.paytm') + ';end;',
+    bhim:      'intent://pay?' + params + '#Intent;scheme=upi;package=in.org.npci.upiapp;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=in.org.npci.upiapp') + ';end;',
+    whatsapp:  'intent://pay?' + params + '#Intent;scheme=upi;package=com.whatsapp;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.whatsapp') + ';end;'
+  };
+
+  var isIOS     = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  var isAndroid = /Android/i.test(navigator.userAgent);
+
+  var iosLinks = {
+    gpay:     'gpay://upi/pay?' + params,
+    phonepe:  'phonepe://pay?' + params,
+    paytm:    'paytm://pay?' + params,
+    bhim:     'upi://pay?' + params,
+    whatsapp: 'whatsapp://pay?' + params
+  };
+
+  function getLink(app) {
+    if (isIOS)     return iosLinks[app]  || genericUPI;
+    if (isAndroid) return appLinks[app]  || genericUPI;
+    return null;
+  }
+
+  ['gpay', 'phonepe', 'paytm', 'bhim', 'whatsapp'].forEach(function(app) {
+    var btn = document.getElementById('btn-' + app);
+    if (!btn) return;
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var link = getLink(app);
+      link ? (window.location.href = link) : showToast('Open on your phone to pay via app');
+    });
+  });
+
+  document.getElementById('btn-generic').addEventListener('click', function(e) {
+    e.preventDefault();
+    (isIOS || isAndroid) ? (window.location.href = genericUPI) : showToast('Open on your phone to pay via UPI');
+  });
+
+  // ── QR code ──
+  if (typeof QRCode !== 'undefined') {
+    new QRCode(document.getElementById('qrcode'), {
+      text: genericUPI,
+      width: 192, height: 192,
+      colorDark: '#1a1a2e',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } else {
+    document.getElementById('qrcode').innerHTML =
+      '<div style="padding:20px;font-size:11px;color:#666;max-width:192px;word-break:break-all;">' + genericUPI + '</div>';
+  }
+
+  // ── Copy UPI ID ──
+  document.getElementById('copyUpi').addEventListener('click', function() {
+    var done = function() { showToast('UPI ID copied!'); };
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(CONFIG.pa).then(done);
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = CONFIG.pa;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      done();
+    }
+  });
+
+  function showToast(msg) {
+    var toast = document.getElementById('toast');
+    document.getElementById('toast-msg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2500);
+  }
+})();
+</script>
+
+</body>
+</html>
