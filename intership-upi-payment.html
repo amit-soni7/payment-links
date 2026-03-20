@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pay Academeet — ₹999</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:wght@700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Space+Grotesk:wght@600;700&display=swap');
 
   /* ── Dark theme (default) ── */
   :root {
@@ -62,7 +62,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -176,16 +176,23 @@
     transition: color 0.35s;
   }
   .amount {
-    font-family: 'Playfair Display', serif;
-    font-size: 46px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 52px;
     font-weight: 700;
+    letter-spacing: -1.5px;
+    font-feature-settings: "tnum";
     background: var(--amount-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1;
   }
-  .amount span { font-size: 26px; }
+  .amount span {
+    font-size: 28px;
+    letter-spacing: 0;
+    vertical-align: super;
+    font-size: 24px;
+  }
 
   /* ── QR ── */
   .qr-container {
@@ -244,7 +251,7 @@
     padding: 12px 14px;
     border-radius: 14px;
     text-decoration: none;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 13px;
     font-weight: 600;
     color: #fff;
@@ -350,7 +357,7 @@
     padding: 14px;
     background: linear-gradient(135deg, var(--accent), #7c5ce7);
     color: #fff;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 15px;
     font-weight: 700;
     border: none;
@@ -439,7 +446,7 @@
 
   @media (max-width: 460px) {
     .payment-card { padding: 24px 16px 20px; }
-    .amount { font-size: 40px; }
+    .amount { font-size: 44px; letter-spacing: -1px; }
     .merchant-name { font-size: 22px; }
     .app-btn { font-size: 12px; padding: 11px 11px; gap: 8px; }
     .app-icon { width: 28px; height: 28px; border-radius: 7px; }
